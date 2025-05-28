@@ -144,7 +144,7 @@ createDataPartition <- function (y, times = 1, p = 0.5, list = TRUE, groups = mi
   }
 
   for (j in 1:times) {
-    tmp <- lapply(split(data.frame(y = y, index = seq_along(y)), seq_along(y)),
+    tmp <- lapply(split(data.frame(y = y, index = seq_along(y)), data$y),
                   subsample, p = p)
     tmp <- sort(as.vector(unlist(tmp)))
     out[[j]] <- tmp
