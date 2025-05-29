@@ -13,7 +13,7 @@ test_that("createDataPartition basic functionality with factor y", {
 
 test_that("createDataPartition with list = FALSE", {
   withr::local_seed(123)
-  partitions_matrix <- createDataPartition(norm(30L), times = 3, p = 0.7, list = FALSE)
+  partitions_matrix <- createDataPartition(rnorm(30L), times = 3, p = 0.7, list = FALSE)
   expect_identical(dim(partitions_matrix), c(22L, 3L))
 })
 
