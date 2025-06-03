@@ -1230,6 +1230,7 @@ gafs <- function (x, ...) UseMethod("gafs")
 #' summary(plot_data)
 #'     }
 #'
+#' @importFrom dplyr %>% arrange pick summarize
 #' @export plot.gafs
 plot.gafs <- function(x,
                       metric = x$control$metric["external"],
@@ -1259,11 +1260,10 @@ plot.gafs <- function(x,
     }
   }
   if(output == "data") out <- plot_dat
-  plot_dat <- if(both_estimates)
-    ddply(plot_dat, c("Iter", "Estimate"),
-          function(x) c(Mean = mean(x[, metric]))) else
-            ddply(plot_dat, c("Iter"),
-                  function(x) c(Mean = mean(x[, metric])))
+  bycols <- if (both_estimates) c("Iter", "Estimate") else "Iter"
+  plot_dat <- plot_dat %>%
+    summarize(Mean = mean(!!sym(metric)), .by = bycols) %>%
+    arrange(pick(bycols))
 
   if(output == "ggplot") {
     out <- if(both_estimates)
