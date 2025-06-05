@@ -950,6 +950,7 @@ gafs <- function (x, ...) UseMethod("gafs")
 #' rf_search
 #'   }
 #'
+#' @importFrom dplyr %>% across all_of arrange summarize
 #' @export gafs.default
 "gafs.default" <-
   function(x, y,
@@ -1119,11 +1120,10 @@ gafs <- function (x, ...) UseMethod("gafs")
       genParallel = gafsControl$genParallel,
       ...
       )
-    averages <- ddply(external, .(Iter),
-                      function(x, nms) {
-                        apply(x[, perfNames, drop = FALSE], 2, mean)
-                      },
-                      nms = perfNames)
+    averages <- external %>%
+      summarize(.by = "Iter", across(all_of(perfNames), mean)) %>%
+      arrange(Iter)
+
     if(!is.null(gafsControl$functions$selectIter)) {
       best_index <-
         gafsControl$functions$selectIter(
@@ -1446,6 +1446,7 @@ update.gafs <- function(object, iter, x, y, ...) {
 
 #' @rdname gafs.default
 #' @method gafs recipe
+#' @importFrom dplyr %>% arrange pick summarize
 #' @export
 "gafs.recipe" <-
   function(x, data,
@@ -1649,11 +1650,10 @@ update.gafs <- function(object, iter, x, y, ...) {
       genParallel = gafsControl$genParallel,
       ...
     )
-    averages <- ddply(external, .(Iter),
-                      function(x, nms) {
-                        apply(x[, perfNames, drop = FALSE], 2, mean)
-                      },
-                      nms = perfNames)
+    averages <- external %>%
+      summarize(.by = "Iter", across(all_of(perfNames), mean)) %>%
+      arrange(Iter)
+
     if(!is.null(gafsControl$functions$selectIter)) {
       best_index <-
         gafsControl$functions$selectIter(

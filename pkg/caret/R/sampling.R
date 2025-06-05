@@ -31,6 +31,7 @@
 #' upSample(fattyAcids, oilType)
 #'
 #'
+#' @importFrom dplyr %>% arrange slice_sample
 #' @export downSample
 downSample <- function(x, y, list = FALSE, yname = "Class") {
   if (!is.data.frame(x)) {
@@ -46,10 +47,9 @@ downSample <- function(x, y, list = FALSE, yname = "Class") {
   minClass <- min(table(y))
   x$.outcome <- y
 
-  x <- ddply(x, .(y),
-             function(dat, n)
-               dat[sample(seq(along.with = dat$.outcome), n), , drop = FALSE],
-             n = minClass)
+  x <- x %>%
+    slice_sample(by = ".outcome", n = minClass) %>%
+    arrange(.outcome)
   y <- x$.outcome
   x <- x[, !(colnames(x) %in% c("y", ".outcome")), drop = FALSE]
   if (list) {
