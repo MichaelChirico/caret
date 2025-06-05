@@ -44,13 +44,13 @@ MeanSD <- function(x, exclude = NULL)
 #'   front, while using a sufficiently 'unusual' suffix to avoid any
 #'   potential name collisions.
 #' @importFrom dplyr %>% across arrange ends_with everything matches pick
-#'   rename_with select summarise
+#'   rename_with select summarize
 #' @importFrom stats sd
 #' @noRd
 dplyr_mean_sd <- function(x, by_cols) {
   x %>%
     select(-matches("^cell|Resample")) %>%
-    summarise(
+    summarize(
       .by = by_cols,
       across(everything(), function(x) mean(x, na.rm = TRUE), .names = "{.col}XXGROUPING_MEAN"),
       across(!ends_with("XXGROUPING_MEAN"), function(x) sd(x, na.rm = TRUE), .names = "{.col}SD")
