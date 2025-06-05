@@ -53,7 +53,7 @@ test_that("bag() works for classification with ldaBag", {
 
   # Check if the fits contain model objects and variable info
   expect_s3_class(bagLDA_fit$fits[[1]]$fit, "lda")
-  expect_length(treebag_fit$fits[[1]]$vars, 134L) # Check if vars were sampled
+  expect_length(bagLDA_fit$fits[[1]]$vars, 50L)
   expect_identical(head(bagLDA_fit$fits[[1]]$vars), c(47L, 78L, 8L, 35L, 55L, 40L))
 })
 
