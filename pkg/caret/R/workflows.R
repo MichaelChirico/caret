@@ -51,11 +51,11 @@ dplyr_mean_sd <- function(x, by_cols) {
   x %>%
     select(-matches("^cell|Resample")) %>%
     summarize(
-      .by = by_cols,
+      .by = {{by_cols}},
       across(everything(), function(x) mean(x, na.rm = TRUE), .names = "{.col}XXGROUPING_MEAN"),
       across(!ends_with("XXGROUPING_MEAN"), function(x) sd(x, na.rm = TRUE), .names = "{.col}SD")
     ) %>%
-    arrange(pick(by_cols)) %>%
+    arrange(pick({{by_cols}})) %>%
     rename_with(function(x) gsub("XXGROUPING_MEAN$", "", x))
 }
 
