@@ -64,7 +64,17 @@ downSample <- function(x, y, list = FALSE, yname = "Class") {
   out
 }
 
+upsample_indices <- function(n, target_size) {
+  idx <- seq_len(n)
 
+  if (target_size > n) {
+    idx <- c(idx, sample(idx, target_size - n, replace = TRUE))
+  }
+
+  idx
+}
+
+#' @importFrom dplyr n slice
 #' @export
 upSample <- function(x, y, list = FALSE, yname = "Class") {
   if (!is.data.frame(x)) {
@@ -80,17 +90,9 @@ upSample <- function(x, y, list = FALSE, yname = "Class") {
   maxClass <- max(table(y))
   x$.outcome <- y
 
-  x <- ddply(x, .(y),
-             function(x, top = maxClass) {
-               if (nrow(x) < top) {
-                 ind <- sample(1:nrow(x),
-                               size = top - nrow(x),
-                               replace = TRUE)
-                 ind <- c(1:nrow(x), ind)
-                 x <- x[ind, , drop = FALSE]
-               }
-               x
-             })
+  # h/t Davis Vaughan: https://github.com/tidyverse/dplyr/issues/7689#issuecomment-2950762795
+  x <- x %>%
+    slice(upsample_indices(n(), maxClass), .by = ".outcome")
   y <- x$.outcome
   x <- x[,!(colnames(x) %in% c("y", ".outcome")), drop = FALSE]
   if (list) {
