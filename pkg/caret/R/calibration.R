@@ -170,6 +170,7 @@ print.calibration <- function(x, ...)
   invisible(x)
 }
 
+utils::globalVariables("is_this_class")
 #' @importFrom dplyr arrange mutate n summarize
 #' @importFrom stats binom.test setNames
 calibCalc <- function(x, class = levels(obs)[1], cuts = 11) {
