@@ -75,6 +75,7 @@ Imports:
     pROC,
     recipes (>= 0.1.10),
     reshape2,
+    rlang,
     stats,
     stats4,
     utils,
