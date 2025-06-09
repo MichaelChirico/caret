@@ -185,6 +185,5 @@ test_that("ggplot.lift with 'values' argument", {
   p <- ggplot(lift_obj, values = c(25, 50, 75))
   expect_s3_class(p, "ggplot")
 
-  segments <- do.call(rbind, lapply(p$layers, function(l) if (inherits(l$geom, "GeomSegment")) l$data))
-  expect_identical(segments, data.frame(x1 = c(0, 0, 50), x2 = c(100, 50, 100), y1 = c(0, 0, 100), y2 = 100))
+  expect_identical(p$layers[[5L]]$data$CumEventPct, c(25, 50, 75))
 })
